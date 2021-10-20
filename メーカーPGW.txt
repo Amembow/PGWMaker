@@ -1,0 +1,92 @@
+Public Class Form1
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim Shitei As String
+
+
+
+        Shitei = TextBox1.Text
+
+        Call Sample3(Shitei)
+
+        MsgBox("終了しました")
+
+
+    End Sub
+
+    Sub Sample3(Path As String)
+        Dim Path1 As String, Path2 As String
+
+        Dim fso = CreateObject("Scripting.FileSystemObject")
+        For Each f In fso.GetFolder(Path).subfolders
+            Path2 = f.name
+            Dim buf As String
+
+            Path1 = Path & "\" & Path2 & "\ひび割れ\成形結果\BPW\"
+            buf = Dir(Path1 & "\*.bpw")
+
+
+            Do While buf <> ""
+
+
+
+
+                Dim st = IO.File.CreateText(CutRight(Path1 & "\" & buf, 4) & ".pgw")
+
+                Using inputfile = New IO.StreamReader(Path1 & "\" & buf)
+
+
+
+
+                    Dim lineStr As Double
+
+
+                    lineStr = inputfile.ReadLine
+                    st.WriteLine(lineStr * 16)
+
+
+                    lineStr = inputfile.ReadLine
+                    st.WriteLine(lineStr * 16)
+
+                    lineStr = inputfile.ReadLine
+                    st.WriteLine(lineStr * 16)
+
+                    lineStr = inputfile.ReadLine
+                    st.WriteLine(lineStr * 16)
+
+                    lineStr = inputfile.ReadLine
+                    st.WriteLine(lineStr)
+
+                    lineStr = inputfile.ReadLine
+                    st.WriteLine(lineStr)
+
+                End Using
+
+                st.Close()
+
+                buf = Dir()
+
+            Loop
+        Next
+
+    End Sub
+
+    Function CutRight(s, i)
+        Dim iLen As Long
+
+        If VarType(s) <> vbString Then
+            Exit Function
+        End If
+
+        iLen = Len(s)
+
+        '// 文字列長より指定文字数が大きい場合
+        If iLen < i Then
+            Exit Function
+        End If
+
+        '// 指定文字数を削除して返す
+        CutRight = Mid(s, 1, iLen - i)
+    End Function
+
+
+End Class
